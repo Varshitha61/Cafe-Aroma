@@ -165,7 +165,7 @@ const Shop: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-[16vw] md:text-[8vw] font-serif font-black text-white leading-none tracking-tighter mb-8"
+            className="text-[14vw] sm:text-[12vw] md:text-[8vw] font-serif font-black text-white leading-none tracking-tighter mb-8"
           >
             BO<span className="text-amber-500 italic font-light drop-shadow-2xl font-sans">U</span>TIQUE
           </motion.h1>
@@ -263,7 +263,7 @@ const Shop: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.7, delay: (index % 4) * 0.1 }}
-                className="group relative h-[500px] md:h-[600px] rounded-[2.5rem] md:rounded-[3rem] overflow-hidden bg-zinc-900 border border-white/5 shadow-2xl"
+                className="group relative h-[450px] sm:h-[500px] md:h-[600px] rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-zinc-900 border border-white/5 shadow-2xl"
               >
                 <motion.img
                   layoutId={`img-${product.id}`}
@@ -279,9 +279,9 @@ const Shop: React.FC = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
-                <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-end">
+                <div className="absolute inset-0 p-6 md:p-12 flex flex-col justify-end">
                   <span className="text-amber-500 font-black tracking-[0.3em] uppercase text-[9px] mb-4">{product.category}</span>
-                  <h3 className="text-2xl md:text-3xl font-serif font-black text-white mb-6 leading-tight tracking-tight group-hover:text-amber-500 transition-colors">
+                  <h3 className="text-xl md:text-3xl font-serif font-black text-white mb-6 leading-tight tracking-tight group-hover:text-amber-500 transition-colors">
                     {product.name}
                   </h3>
                   <div className="flex items-center justify-between">

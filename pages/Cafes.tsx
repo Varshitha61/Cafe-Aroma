@@ -148,10 +148,10 @@ const MagneticSearch: React.FC = () => {
       <div className="relative flex items-center">
         <input
           type="text"
-          placeholder="Enter a city to find your sanctuary..."
-          className="w-full bg-stone-900/60 backdrop-blur-3xl border border-white/10 rounded-full py-8 px-20 text-white text-lg font-light tracking-[0.1em] placeholder-stone-500 focus:outline-none focus:border-amber-500/50 transition-all shadow-3xl"
+          placeholder="Find your city..."
+          className="w-full bg-stone-900/60 backdrop-blur-3xl border border-white/10 rounded-full py-6 md:py-8 px-12 md:px-20 text-white text-base md:text-lg font-light tracking-[0.1em] placeholder-stone-500 focus:outline-none focus:border-amber-500/50 transition-all shadow-3xl"
         />
-        <Search className="absolute left-8 text-amber-500/30 group-hover:text-amber-500 transition-colors" size={28} />
+        <Search className="absolute left-4 md:left-8 text-amber-500/30 group-hover:text-amber-500 transition-colors" size={24} />
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -231,8 +231,8 @@ const SanctuaryCard: React.FC<{ cafe: CafeLocation; index: number }> = ({ cafe, 
           </div>
         </div>
 
-        <div className="p-10 md:p-12" style={{ transform: "translateZ(50px)" }}>
-          <h3 className="text-3xl md:text-4xl font-serif font-black text-white mb-6 group-hover:text-amber-500 transition-colors duration-500">
+        <div className="p-8 md:p-12" style={{ transform: "translateZ(50px)" }}>
+          <h3 className="text-2xl md:text-4xl font-serif font-black text-white mb-6 group-hover:text-amber-500 transition-colors duration-500">
             {cafe.name}
           </h3>
 
@@ -345,7 +345,7 @@ const Cafes: React.FC = () => {
             <Sparkles size={16} className="animate-pulse" /> The Global Reserves
           </motion.div>
 
-          <h1 className="text-[18vw] md:text-[16vw] font-serif font-black text-white leading-none tracking-tighter mb-8 drop-shadow-[0_20px_50px_rgba(0,0,0,1)]">
+          <h1 className="text-[16vw] md:text-[16vw] font-serif font-black text-white leading-none tracking-tighter mb-8 drop-shadow-[0_20px_50px_rgba(0,0,0,1)]">
             SAN <span className="text-amber-500 italic font-light drop-shadow-none">C</span> TUARY
           </h1>
 
@@ -422,7 +422,7 @@ const Cafes: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10 mb-16 md:mb-20 px-4">
             <div className="max-w-3xl">
               <span className="text-amber-500 font-black tracking-[0.5em] text-[11px] uppercase block mb-6">Visual Notes</span>
-              <h2 className="text-4xl md:text-9xl font-serif font-black text-white italic tracking-tighter leading-none">
+              <h2 className="text-5xl md:text-9xl font-serif font-black text-white italic tracking-tighter leading-none">
                 The Rhythm<span className="text-amber-500">.</span>
               </h2>
             </div>

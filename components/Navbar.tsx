@@ -19,14 +19,31 @@ const Navbar: React.FC = () => {
   const navBorder = useTransform(scrollY, [0, 100], ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 0.05)"]);
 
   // --- Side Effect: Lock Scroll ---
+  // --- Side Effect: Lock Scroll & Key Listeners ---
   useEffect(() => {
+    const lockScroll = (lock: boolean) => {
+      document.body.style.overflow = lock ? 'hidden' : 'unset';
+      document.documentElement.style.overflow = lock ? 'hidden' : 'unset';
+    };
+
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        setIsCartOpen(false);
+      }
+    };
+
     if (isOpen || isCartOpen) {
-      document.body.style.overflow = 'hidden';
+      lockScroll(true);
+      window.addEventListener('keydown', handleEsc);
     } else {
-      document.body.style.overflow = 'unset';
+      lockScroll(false);
+      window.removeEventListener('keydown', handleEsc);
     }
+
     return () => {
-      document.body.style.overflow = 'unset';
+      lockScroll(false);
+      window.removeEventListener('keydown', handleEsc);
     };
   }, [isOpen, isCartOpen]);
 
@@ -50,8 +67,8 @@ const Navbar: React.FC = () => {
       style={{ backgroundColor: navBg, backdropFilter: navBlur, borderBottom: `1px solid ${navBorder}` }}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
     >
-      <div className="max-w-[1800px] mx-auto px-6 md:px-12">
-        <div className="flex justify-between items-center h-28">
+      <div className="w-full px-6 md:px-12">
+        <div className="flex justify-between items-center h-20 md:h-28">
 
           <Link to="/" className="flex items-center gap-4 group">
             <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.8 }} className="text-amber-500">
@@ -164,7 +181,7 @@ const Navbar: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 40, stiffness: 400 }}
-              className="fixed inset-y-0 right-0 w-full md:w-[600px] bg-zinc-950/40 backdrop-blur-3xl z-[110] shadow-3xl flex flex-col border-l border-white/10 p-8 md:p-16"
+              className="fixed inset-y-0 right-0 w-full md:w-[600px] h-[100dvh] bg-zinc-950/40 md:bg-zinc-950/40 backdrop-blur-3xl z-[110] shadow-3xl flex flex-col border-l border-white/10 p-6 md:p-16"
             >
               <div className="flex justify-between items-center mb-16">
                 <div>
@@ -247,21 +264,21 @@ const Navbar: React.FC = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] lg:hidden"
+              className="fixed inset-0 bg-black/40 backdrop-blur-2xl z-[100] lg:hidden"
             />
             <motion.div
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 40, stiffness: 400 }}
-              className="fixed inset-y-0 left-0 w-[85%] max-w-[450px] lg:hidden bg-zinc-950/80 backdrop-blur-3xl z-[110] flex flex-col border-r border-white/10"
+              initial={{ opacity: 0, scale: 1.1 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.1 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="fixed inset-0 lg:hidden bg-zinc-950 z-[1100] flex flex-col h-[100dvh]"
             >
-              <div className="p-12 flex justify-between items-center border-b border-white/5">
+              <div className="p-8 flex justify-between items-center border-b border-white/5 bg-zinc-950/50 backdrop-blur-md">
                 <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center gap-4">
                   <Coffee size={28} className="text-amber-500" />
                   <div className="flex flex-col">
-                    <span className="font-serif font-black text-xl text-white tracking-widest">CAFE AROMA</span>
-                    <span className="text-[6px] tracking-[0.5em] text-stone-500 uppercase font-black">Sanctuary Menu</span>
+                    <span className="font-serif font-black text-2xl text-white tracking-widest">CAFE AROMA</span>
+                    <span className="text-[8px] tracking-[0.5em] text-stone-500 uppercase font-black">Sanctuary Menu</span>
                   </div>
                 </Link>
                 <button onClick={() => setIsOpen(false)} className="w-12 h-12 rounded-full border border-white/5 flex items-center justify-center text-white">
@@ -269,18 +286,18 @@ const Navbar: React.FC = () => {
                 </button>
               </div>
 
-              <div className="relative flex-grow flex flex-col justify-center p-12 overflow-hidden">
+              <div className="relative flex-grow flex flex-col justify-center items-center p-8 overflow-y-auto overflow-x-hidden">
                 {/* Cinematic Background for Mobile Menu */}
-                <div className="absolute inset-0 z-0 opacity-20">
+                <div className="absolute inset-0 z-0 opacity-10">
                   <img
-                    src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800"
-                    className="w-full h-full object-cover grayscale"
+                    src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200"
+                    className="w-full h-full object-cover scale-125 saturate-0"
                     alt="Background"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-transparent to-zinc-950" />
+                  <div className="absolute inset-0 bg-radial-gradient from-transparent to-zinc-950" />
                 </div>
 
-                <div className="relative z-10 flex flex-col gap-12">
+                <div className="relative z-10 flex flex-col items-center gap-10 md:gap-14">
                   {navLinks.map((link, i) => (
                     <motion.div
                       key={link.name}
@@ -291,13 +308,13 @@ const Navbar: React.FC = () => {
                       <Link
                         to={link.path}
                         onClick={() => setIsOpen(false)}
-                        className={`text-6xl font-serif font-black tracking-tighter block transition-all ${isActive(link.path) ? 'text-amber-500' : 'text-white hover:text-amber-500'
+                        className={`text-5xl sm:text-6xl md:text-7xl font-serif font-black tracking-tighter block text-center transition-all ${isActive(link.path) ? 'text-amber-500 scale-110' : 'text-stone-300 hover:text-white'
                           }`}
                       >
                         {link.name}
                       </Link>
                       {isActive(link.path) && (
-                        <motion.div layoutId="mobileActive" className="h-1 w-20 bg-amber-500 mt-2" />
+                        <motion.div layoutId="mobileActive" className="h-[2px] w-12 bg-amber-500 mx-auto mt-4" />
                       )}
                     </motion.div>
                   ))}
@@ -306,28 +323,28 @@ const Navbar: React.FC = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
-                    className="mt-12 pt-12 border-t border-white/10"
+                    className="mt-8 pt-8 border-t border-white/10 w-full max-w-xs mx-auto text-center"
                   >
                     {user ? (
-                      <div className="space-y-8">
+                      <div className="space-y-6">
                         <div>
-                          <p className="text-stone-500 text-[9px] font-black uppercase tracking-[0.4em] mb-2">Connected as</p>
-                          <p className="text-white text-lg font-bold">{user.email}</p>
+                          <p className="text-stone-500 text-[8px] font-black uppercase tracking-[0.4em] mb-2">Connected</p>
+                          <p className="text-white text-sm font-bold">{user.email}</p>
                         </div>
-                        <button onClick={handleLogout} className="px-8 py-4 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-[0.4em] rounded-full hover:bg-red-500/10 transition-all">
-                          Dissolve Session
+                        <button onClick={handleLogout} className="px-8 py-3 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-[0.4em] rounded-full hover:bg-red-500/10 transition-all">
+                          End Session
                         </button>
                       </div>
                     ) : (
-                      <Link to="/login" onClick={() => setIsOpen(false)} className="inline-flex items-center gap-4 text-xl font-black tracking-[0.3em] uppercase text-amber-500 group">
-                        Sign In to Sanctuary <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+                      <Link to="/login" onClick={() => setIsOpen(false)} className="inline-flex items-center gap-4 text-xs font-black tracking-[0.5em] uppercase text-amber-500 group">
+                        Sign In <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                       </Link>
                     )}
                   </motion.div>
                 </div>
               </div>
 
-              <div className="p-12 border-t border-white/5 bg-zinc-950/20">
+              <div className="p-6 md:p-12 border-t border-white/5 bg-zinc-950/20">
                 <p className="text-[8px] tracking-[1em] text-stone-700 uppercase font-black text-center">Est 1996 • Heritage Coffee</p>
               </div>
             </motion.div>

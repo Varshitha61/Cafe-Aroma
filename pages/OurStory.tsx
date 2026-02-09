@@ -233,13 +233,13 @@ const OurStory: React.FC = () => {
                     initial={{ opacity: 0, scale: 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 2 }}
-                    className="max-w-4xl border border-white/5 bg-white/5 backdrop-blur-3xl p-20 rounded-[4rem] relative overflow-hidden group"
+                    className="max-w-4xl border border-white/5 bg-white/5 backdrop-blur-3xl p-10 md:p-20 rounded-[3rem] md:rounded-[4rem] relative overflow-hidden group"
                 >
                     <div className="absolute -top-60 -right-60 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[150px] group-hover:bg-amber-500/10 transition-colors duration-1000" />
 
                     <Coffee size={80} className="text-amber-500 mb-16 mx-auto stroke-thin" />
 
-                    <h2 className="text-5xl md:text-8xl font-serif font-black text-white mb-12 tracking-tighter leading-tight">
+                    <h2 className="text-4xl md:text-8xl font-serif font-black text-white mb-12 tracking-tighter leading-tight">
                         Crafting Immortality, <br />One <span className="italic text-amber-500">Cup</span> at a Time.
                     </h2>
 
@@ -270,7 +270,7 @@ const ChapterSection: React.FC<{ chapter: any; index: number }> = ({ chapter, in
     const isInView = useInView(ref, { margin: "-40% 0px -40% 0px", once: false });
 
     return (
-        <div ref={ref} className="min-h-screen flex items-center justify-center py-40">
+        <div ref={ref} className="min-h-screen flex items-center justify-center py-20 md:py-40">
             <div className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-20 lg:gap-32 w-full max-w-[1600px]`}>
 
                 {/* Visual Content */}
@@ -294,7 +294,7 @@ const ChapterSection: React.FC<{ chapter: any; index: number }> = ({ chapter, in
                         initial={{ y: 50, opacity: 0 }}
                         animate={isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
                         transition={{ delay: 1 }}
-                        className="absolute bottom-12 left-12 right-12 p-8 bg-black/40 backdrop-blur-2xl rounded-3xl border border-white/10"
+                        className="absolute bottom-6 left-6 right-6 md:bottom-12 md:left-12 md:right-12 p-6 md:p-8 bg-black/40 backdrop-blur-2xl rounded-[2rem] border border-white/10"
                     >
                         <div className="flex items-center gap-6">
                             <div className="p-4 bg-amber-500/20 text-amber-500 rounded-2xl">
@@ -330,7 +330,7 @@ const ChapterSection: React.FC<{ chapter: any; index: number }> = ({ chapter, in
                                 ))}
                             </h2>
 
-                            <div className="space-y-12 border-l-2 border-amber-500/10 pl-12">
+                            <div className="space-y-8 md:space-y-12 border-l-2 border-amber-500/10 pl-8 md:pl-12">
                                 <p className="text-stone-200 text-2xl md:text-3xl font-light leading-relaxed">
                                     {chapter.description}
                                 </p>

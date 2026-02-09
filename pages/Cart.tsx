@@ -93,7 +93,7 @@ const Cart: React.FC = () => {
                         >
                             <ShoppingBag size={12} /> The Vessel
                         </motion.div>
-                        <h1 className="text-6xl md:text-9xl font-serif font-black text-white tracking-tighter leading-none">
+                        <h1 className="text-4xl sm:text-6xl md:text-9xl font-serif font-black text-white tracking-tighter leading-none">
                             Selected <span className="italic font-light text-stone-700">Artifacts.</span>
                         </h1>
                     </div>
@@ -134,7 +134,7 @@ const Cart: React.FC = () => {
 
                     {/* Checkout Totals */}
                     <div className="lg:col-span-4 lg:sticky lg:top-40 h-fit">
-                        <div className="bg-white/5 border border-white/5 rounded-[4rem] p-12 backdrop-blur-3xl relative overflow-hidden group">
+                        <div className="bg-white/5 border border-white/5 rounded-[3rem] md:rounded-[4rem] p-8 md:p-12 backdrop-blur-3xl relative overflow-hidden group">
                             <div className="absolute -top-20 -right-20 w-64 h-64 bg-amber-500/5 rounded-full blur-[100px] group-hover:bg-amber-500/10 transition-colors" />
 
                             <h2 className="text-4xl font-serif font-black text-white mb-12 tracking-tight">Summary</h2>
@@ -183,7 +183,7 @@ const Cart: React.FC = () => {
                         initial={{ opacity: 0, y: 40 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="mt-60"
+                        className="mt-20 md:mt-60"
                     >
                         <div className="flex items-center gap-10 mb-24">
                             <h2 className="text-4xl md:text-5xl font-serif font-black text-white whitespace-nowrap">Enhance the <span className="italic font-light text-stone-700">Ritual.</span></h2>

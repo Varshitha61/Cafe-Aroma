@@ -49,7 +49,7 @@ const Home: React.FC = () => {
             <Sparkles size={14} className="animate-pulse" /> Est. 1996
           </motion.div>
 
-          <h1 className="text-[12vw] md:text-[8vw] font-serif font-black text-white leading-none tracking-tighter mb-8 drop-shadow-2xl">
+          <h1 className="text-[14vw] sm:text-[12vw] md:text-[8vw] font-serif font-black text-white leading-none tracking-tighter mb-8 drop-shadow-2xl">
             MOMENTS <span className="text-amber-500 italic font-light">Brewed</span>
           </h1>
 
@@ -114,7 +114,7 @@ const Home: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12 mb-16 md:mb-32">
           <div className="max-w-2xl">
             <span className="text-amber-500 font-black tracking-[0.5em] text-[10px] uppercase block mb-6">The Catalog</span>
-            <h2 className="text-6xl md:text-9xl font-serif font-black text-white leading-none tracking-tighter">
+            <h2 className="text-5xl sm:text-6xl md:text-9xl font-serif font-black text-white leading-none tracking-tighter">
               Discover the <span className="italic font-light text-stone-500">Art.</span>
             </h2>
           </div>
@@ -140,8 +140,8 @@ const Home: React.FC = () => {
                   className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[2s] ease-out brightness-[0.7]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0908] via-transparent to-transparent opacity-90" />
-                <div className="absolute inset-0 flex flex-col justify-end p-16">
-                  <h3 className="text-4xl md:text-5xl font-serif font-black text-white mb-8 tracking-tighter">{item.title}</h3>
+                <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-16">
+                  <h3 className="text-3xl sm:text-4xl md:text-5xl font-serif font-black text-white mb-8 tracking-tighter">{item.title}</h3>
                   <div className="w-12 h-[2px] bg-amber-500 group-hover:w-full transition-all duration-700" />
                 </div>
               </Link>
@@ -222,7 +222,7 @@ const Home: React.FC = () => {
           </div>
           <div className="w-full lg:w-1/2">
             <span className="text-amber-500 font-black tracking-[0.8em] text-[10px] uppercase block mb-10">Exclusive Access</span>
-            <h2 className="text-4xl md:text-8xl font-serif font-black text-white leading-tight tracking-tighter mb-10">
+            <h2 className="text-[10vw] sm:text-4xl md:text-8xl font-serif font-black text-white leading-tight tracking-tighter mb-10">
               The Aroma <span className="italic font-light">Order.</span>
             </h2>
             <p className="text-stone-300 text-base md:text-2xl font-light leading-relaxed mb-16 md:border-l-2 md:border-amber-500/20 md:pl-10">
