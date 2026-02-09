@@ -189,6 +189,10 @@ For questions or support, please open an issue on GitHub.
 
 ---
 
+## 📈 Latest Activity
+
+- **Feb 9, 2026**: Updated project to version 1.0.0. Enhanced UI components and finalized AI Barista integration.
+
 **Built with ☕ and ❤️ by the Cafe Aroma team**
 
 *Handcrafted Since 1996 | Rooted in Chikmagalur's Heritage*
