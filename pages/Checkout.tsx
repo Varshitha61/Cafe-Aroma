@@ -52,26 +52,53 @@ const Checkout: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    // Phase 1: Initial Processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsProcessing(false);
-    setStep('verifying');
 
-    // Phase 2: Detailed Verification
-    const duration = 4000;
-    const interval = 50;
-    const steps = duration / interval;
-    const increment = 100 / steps;
+    try {
+      // Phase 1: Call Backend API
+      const response = await fetch('/api/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cartItems,
+          total: grandTotal,
+          customer: {
+            email: user?.email,
+            address: formData.address,
+            city: formData.city,
+            zip: formData.zip
+          },
+          paymentMethod
+        })
+      });
 
-    for (let i = 0; i <= steps; i++) {
-      await new Promise(resolve => setTimeout(resolve, interval));
-      setVerificationProgress(Math.min(i * increment, 100));
+      if (!response.ok) throw new Error("Backend ritual failed");
+
+      const data = await response.json();
+
+      setIsProcessing(false);
+      setStep('verifying');
+
+      // Phase 2: Detailed Verification (Visual Ritual)
+      const duration = 4000;
+      const interval = 50;
+      const steps = duration / interval;
+      const increment = 100 / steps;
+
+      for (let i = 0; i <= steps; i++) {
+        await new Promise(resolve => setTimeout(resolve, interval));
+        setVerificationProgress(Math.min(i * increment, 100));
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setStep('success');
+      clearCart();
+    } catch (error) {
+      console.error("Order error:", error);
+      setIsProcessing(false);
+      alert("The ritual was interrupted. Please check your connection and try again.");
     }
-
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setStep('success');
-    clearCart();
   };
+
 
   if (!user) {
     return <Navigate to="/login" state={{ from: { pathname: '/checkout' } }} />;

@@ -1,7 +1,4 @@
-// api/barista.ts
-
-
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
@@ -10,75 +7,71 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const body = req.body || {};
-    const userMessage: string | undefined = body.message;
+    const { message, history = [] } = req.body;
 
-    if (!userMessage || !userMessage.trim()) {
+    if (!message || !message.trim()) {
       res.status(400).json({ error: "Message is required" });
       return;
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey || apiKey.includes("your-real-gemini-key")) {
+    if (!apiKey || apiKey === "your-real-gemini-key-here" || apiKey.includes("your-real")) {
       return res.status(500).json({
-        error: "Gemini API key is missing or invalid. Please set GEMINI_API_KEY in your .env.local file. Get one at: https://aistudio.google.com/app/apikey"
+        error: "Server configuration error: Gemini API key is missing. Please set GEMINI_API_KEY in your deployment environment."
       });
     }
 
-    const ai = new GoogleGenAI({ apiKey });
-    const model = "gemini-1.5-flash";
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      systemInstruction: `You are "Aroma", the Lead Barista and Coffee Storyteller at "Cafe Aroma" - a premium coffee sanctuary rooted in Chikmagalur's heritage since 1996. ☕
 
-    const response = await ai.models.generateContent({
-      model,
-      contents: [{ role: "user", parts: [{ text: userMessage }] }],
-      config: {
-        systemInstruction: `You are the Virtual Waiter at "Cafe Aroma". ☕✨
-Your role is to act exactly like a professional, friendly waiter at a premium cafe.
+Your mission: Create genuine human connections through coffee conversations. You're not just taking orders—you're crafting memorable experiences.
 
-Responsibilities:
-1. **Greet & Seat**: Welcome guests properly.
-2. **Take Orders**: Actively take their food and drink orders. Ask for specifics if needed (e.g., "Hot or Iced?" for coffee).
-3. **Upsell**: Smartly suggest food pairings. "Would you like a fresh Croissant with that Cappuccino?"
-4. **Answer Questions**: Explain menu items (ingredients, taste).
-5. **Manage the Bill**: If they ask for the bill/total, calculate it based on the prices below.
-6. **Confirm**: Always confirm the order back to them before finishing. "So that's one Latte and a Sandwich, correct?"
+--- CORE PERSONALITY ---
+• **Warm & Authentic**: Talk like a real friend who happens to make amazing coffee. Use natural language, contractions, and genuine enthusiasm.
+• **Expert Storyteller**: Every drink has a story. Share the journey from Chikmagalur's misty hills to their cup when it feels right.
 
-Personality:
-- Professional yet warm and inviting.
-- Efficient but chatty enough to be engaging.
-- Use emojis to enhance the mood (☕, 🥐, 📝, ✅).
+--- MENU EXPERTISE ---
+• Heritage Reserve Americano (₹215)
+• Amber Smoked Latte (₹295)
+• Velvet Flat White (₹285)
+• Sea Salt Caramel Cold Brew (₹310)
+• Midnight Nitro Cold Brew (₹340)
+• Pistachio Glazed Croissant (₹220)
+• Truffle Mushroom Toast (₹280)
+• Noir Velvet Cheesecake (₹320)
+• Gold Leaf Brownie (₹240)
 
-Menu & Prices (in Rupees):
-- Espresso: ₹150
-- Cappuccino: ₹220
-- Cafe Latte: ₹240
-- Hazelnut Frappe: ₹290
-- Iced Americano: ₹200
-- Tandoori Paneer Sandwich: ₹250
-- Butter Croissant: ₹160
-- Avocado Sourdough Toast: ₹350
-- Chilli Cheese Toast: ₹180
-- Cocoa Fantasy Cake: ₹200
-- Artisan Ceramic Mug: ₹399
-
-Context:
-- If they ask for something not on the menu, politely say we don't serve that and suggest the closest alternative.
-- If they say "I'm ready to order", ask "What can I get for you?"
-- If they say "That's all", confirm the full order and total price.`
-      },
+--- RESPONSE GUIDELINES ---
+1. Be concise but warm.
+2. If they are looking for something specific, suggest a visit to the "Shop".
+3. If they seem hungry, suggest a pairing (like a Brownie with their Coffee).
+4. Most importantly: Be Aroma. ☕✨`
     });
 
-    const text =
-      response.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "I'm sorry, I'm having trouble brewing a response right now. Please try again!";
+    const conversationHistory = history.map((msg: any) => ({
+      role: msg.role === 'model' ? 'model' : 'user',
+      parts: [{ text: msg.text }]
+    }));
 
-    res.status(200).json({ reply: text });
+    const chat = model.startChat({
+      history: conversationHistory,
+    });
+
+    const result = await chat.sendMessage(message);
+    const text = result.response.text();
+
+    res.status(200).json({
+      reply: text,
+      // The API returns the text, the client handles local navigation logic
+    });
   } catch (error: any) {
     console.error("Error in barista API:", error);
-    res
-      .status(500)
-      .json({
-        error: error.message || "Our Virtual Barista is currently on a coffee break.",
-      });
+    res.status(500).json({
+      error: "Our Virtual Barista is currently on a coffee break. Please try again in a moment.",
+      details: error.message
+    });
   }
 }
+
