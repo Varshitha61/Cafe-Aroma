@@ -5,9 +5,10 @@ const CustomCursor: React.FC = () => {
     const cursorX = useMotionValue(-100);
     const cursorY = useMotionValue(-100);
 
-    const springConfig = { damping: 25, stiffness: 700 };
+    const springConfig = { damping: 40, stiffness: 450 };
     const cursorXSpring = useSpring(cursorX, springConfig);
     const cursorYSpring = useSpring(cursorY, springConfig);
+
 
     useEffect(() => {
         const moveCursor = (e: MouseEvent) => {
@@ -30,7 +31,9 @@ const CustomCursor: React.FC = () => {
                 y: cursorYSpring,
                 translateX: "-50%",
                 translateY: "-50%",
+                willChange: "transform",
             }}
+
         >
             <div className="absolute inset-0 bg-amber-900/10 rounded-full blur-sm scale-150"></div>
         </motion.div>

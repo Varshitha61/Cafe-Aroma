@@ -8,13 +8,15 @@ const ParallaxIcons: React.FC = () => {
     const mouseY = useMotionValue(0);
 
     // Smooth spring animation for mouse movement
-    const springConfig = { damping: 25, stiffness: 50 };
+    const springConfig = { damping: 30, stiffness: 60 };
     const springX = useSpring(mouseX, springConfig);
     const springY = useSpring(mouseY, springConfig);
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
-            // Normalize mouse position (-1 to 1)
+            // Only run on desktop and only if window is focused
+            if (window.innerWidth < 1024) return;
+
             const xPct = (e.clientX / window.innerWidth) - 0.5;
             const yPct = (e.clientY / window.innerHeight) - 0.5;
             mouseX.set(xPct);
@@ -26,21 +28,21 @@ const ParallaxIcons: React.FC = () => {
     }, [mouseX, mouseY]);
 
     // Icons to display
-    const icons = [Coffee, Pizza, Utensils, Cloud];
+    const icons = [Coffee, Utensils, Cloud];
 
-    // Generate particles with different parallax depths
+    // Generate fewer particles with different parallax depths
     const particles = React.useMemo(() => {
-        return [...Array(15)].map((_, i) => {
-            const depth = Math.random() * 50 + 20; // Parallax depth factor
+        return [...Array(8)].map((_, i) => {
+            const depth = Math.random() * 30 + 10;
             return {
                 id: i,
                 Icon: icons[i % icons.length],
-                size: Math.random() * 24 + 16,
+                size: Math.random() * 20 + 16,
                 initialX: Math.random() * 100,
                 initialY: Math.random() * 100,
-                duration: Math.random() * 20 + 20,
-                delay: Math.random() * 10,
-                depth, // Store depth for usage in transform
+                duration: Math.random() * 15 + 15,
+                delay: Math.random() * 5,
+                depth,
             };
         });
     }, []);
@@ -61,30 +63,31 @@ const ParallaxIcons: React.FC = () => {
 
 // Separate component to handle individual transforms efficiently
 const ParallaxItem = ({ particle, springX, springY }: { particle: any, springX: any, springY: any }) => {
-    const x = useTransform(springX, (val: number) => val * particle.depth); // Move based on mouse * depth
+    const x = useTransform(springX, (val: number) => val * particle.depth);
     const y = useTransform(springY, (val: number) => val * particle.depth);
 
     return (
         <motion.div
-            className="absolute text-amber-900/40" // Increased opacity to 40%
+            className="absolute text-amber-900/20"
             style={{
                 top: `${particle.initialY}%`,
                 left: `${particle.initialX}%`,
                 x,
                 y,
+                willChange: "transform",
             }}
             animate={{
-                y: [0, -30, 0], // Floating animation independent of parallax
-                rotate: [0, 10, -10, 0],
+                y: [0, -20, 0],
+                rotate: [0, 5, -5, 0],
             }}
             transition={{
                 duration: particle.duration,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: "linear",
                 delay: particle.delay,
             }}
         >
-            <particle.Icon size={particle.size} strokeWidth={2} /> {/* Increased stroke width */}
+            <particle.Icon size={particle.size} strokeWidth={1.5} />
         </motion.div>
     );
 };
@@ -92,63 +95,44 @@ const ParallaxItem = ({ particle, springX, springY }: { particle: any, springX: 
 // Geometric shapes for added visual complexity
 const GeometricShapes: React.FC = () => {
     return (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-50">
             {/* Rotating Dashed Circle - Top Right */}
             <motion.div
-                className="absolute -top-20 -right-20 w-[400px] h-[400px] border border-dashed border-amber-900/8 rounded-full"
+                className="absolute -top-20 -right-20 w-[300px] h-[300px] border border-dashed border-amber-900/5 rounded-full"
                 animate={{ rotate: 360 }}
-                transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.div
-                className="absolute top-10 right-10 w-[250px] h-[250px] border border-dotted border-coffee-800/6 rounded-full"
-                animate={{ rotate: -360 }}
-                transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+                style={{ willChange: "transform" }}
             />
 
             {/* Rotating Dashed Circle - Bottom Left */}
             <motion.div
-                className="absolute -bottom-32 -left-32 w-[500px] h-[500px] border border-dashed border-stone-800/6 rounded-full"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+                className="absolute -bottom-32 -left-32 w-[400px] h-[400px] border border-dashed border-stone-800/5 rounded-full"
+                animate={{ rotate: -360 }}
+                transition={{ duration: 150, repeat: Infinity, ease: "linear" }}
+                style={{ willChange: "transform" }}
             />
-
-            {/* Decorative Square - Middle Left */}
-            <motion.div
-                className="absolute top-1/3 left-[5%] w-16 h-16 border border-amber-500/8 rotate-45"
-                animate={{ rotate: [45, 90, 45], scale: [1, 1.05, 1] }}
-                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-            />
-
-            {/* Decorative Triangle - Middle Right */}
-            <div className="absolute top-2/3 right-[10%] w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[35px] border-b-amber-900/6 opacity-40 animate-float" style={{ animationDuration: '8s' }}></div>
         </div>
     );
 };
 
 const AnimatedBackground: React.FC = () => {
     return (
-        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-            {/* Soft gradient base */}
-            <div className="absolute inset-0 bg-[#fafaf9]"></div>
-
+        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-[#fafaf9]">
             {/* Grid Pattern - Very Subtle */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808006_1px,transparent_1px),linear-gradient(to_bottom,#80808006_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:64px_64px]"></div>
 
-            {/* Moving Blobs with CSS-defined colors */}
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full blur-[120px] animate-blob-1"></div>
-            <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full blur-[120px] animate-blob-2"></div>
-            <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] rounded-full blur-[100px] animate-blob-3"></div>
-            <div className="absolute bottom-[20%] left-[10%] w-[35%] h-[35%] rounded-full blur-[110px] animate-blob-4"></div>
+            {/* Moving Blobs with CSS-defined colors - Optimized blur */}
+            <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[30%] rounded-full blur-[80px] animate-blob-1 opacity-40"></div>
+            <div className="absolute bottom-[-5%] right-[-5%] w-[40%] h-[40%] rounded-full blur-[80px] animate-blob-2 opacity-40"></div>
 
             <GeometricShapes />
-
-            {/* Interactive Parallax Layer */}
             <ParallaxIcons />
 
             {/* Subtle texture overlay */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/pinstripe-dark.png')]"></div>
+            <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/pinstripe-dark.png')]"></div>
         </div>
     );
 };
+
 
 export default AnimatedBackground;

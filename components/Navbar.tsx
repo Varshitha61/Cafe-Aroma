@@ -203,8 +203,9 @@ const Navbar: React.FC = () => {
                   cartItems.map(item => (
                     <motion.div layout key={item.id} className="flex gap-8 group items-center">
                       <div className="w-32 h-32 rounded-[2rem] overflow-hidden flex-shrink-0 bg-stone-900 border border-white/5">
-                        <img src={item.image} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" alt={item.name} />
+                        <img src={item.image} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" alt={item.name} decoding="async" />
                       </div>
+
                       <div className="flex-grow flex flex-col justify-center">
                         <div className="flex justify-between items-start mb-2">
                           <h4 className="text-white font-serif text-2xl font-bold tracking-tight">{item.name}</h4>
@@ -290,12 +291,14 @@ const Navbar: React.FC = () => {
                 {/* Cinematic Background for Mobile Menu */}
                 <div className="absolute inset-0 z-0 opacity-10">
                   <img
-                    src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200"
+                    src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1000&q=70"
                     className="w-full h-full object-cover scale-125 saturate-0"
                     alt="Background"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-radial-gradient from-transparent to-zinc-950" />
                 </div>
+
 
                 <div className="relative z-10 flex flex-col items-center gap-10 md:gap-14">
                   {navLinks.map((link, i) => (

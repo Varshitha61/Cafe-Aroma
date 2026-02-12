@@ -32,24 +32,24 @@ const BrewAtmosphere: React.FC = () => {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-amber-900/10 via-black to-black opacity-60" />
-      {[...Array(15)].map((_, i) => (
+      {[...Array(6)].map((_, i) => (
         <motion.div
           key={`aroma-${i}`}
           initial={{ y: 0, opacity: 0, scale: 0.5 }}
           animate={{
-            y: [-20, -150],
-            x: [0, (Math.random() - 0.5) * 50],
-            opacity: [0, 0.3, 0],
-            scale: [0.5, 1.5, 0.8]
+            y: [-20, -100],
+            x: [0, (Math.random() - 0.5) * 30],
+            opacity: [0, 0.2, 0],
+            scale: [0.5, 1.2, 0.8]
           }}
           transition={{
-            duration: 10 + Math.random() * 10,
+            duration: 8 + Math.random() * 8,
             repeat: Infinity,
-            delay: i * 0.5,
+            delay: i * 1,
             ease: "easeOut"
           }}
-          className="absolute w-2 h-2 bg-amber-500/20 rounded-full blur-md"
-          style={{ bottom: -20, left: `${Math.random() * 100}%` }}
+          className="absolute w-2 h-2 bg-amber-500/10 rounded-full blur-md"
+          style={{ bottom: -20, left: `${20 + (i * 15)}%` }}
         />
       ))}
     </div>
@@ -60,20 +60,21 @@ const BrewAtmosphere: React.FC = () => {
 const BaristaPulse: React.FC<{ isActive: boolean }> = ({ isActive }) => {
   return (
     <div className="flex items-center gap-1.5 h-6">
-      {[...Array(8)].map((_, i) => (
+      {[...Array(4)].map((_, i) => (
         <motion.div
           key={i}
           animate={isActive ? {
-            height: [4, 16, 4],
+            height: [4, 12, 4],
             backgroundColor: ["#d97706", "#fde68a", "#d97706"]
           } : { height: 4, backgroundColor: "#333" }}
-          transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.1 }}
+          transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15 }}
           className="w-1 rounded-full"
         />
       ))}
     </div>
   );
 };
+
 
 // --- Product Suggestion Card ---
 const ProductSuggestion: React.FC<{ product: ChatMessage['productPreview']; navigate: any }> = ({ product, navigate }) => {

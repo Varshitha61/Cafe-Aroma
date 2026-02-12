@@ -1,18 +1,22 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Home from './pages/Home';
-import OurStory from './pages/OurStory';
-import Shop from './pages/Shop';
-import Cafes from './pages/Cafes';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
-import Login from './pages/Login';
+
+// Lazy load pages for better performance
+const Home = lazy(() => import('./pages/Home'));
+const OurStory = lazy(() => import('./pages/OurStory'));
+const Shop = lazy(() => import('./pages/Shop'));
+const Cafes = lazy(() => import('./pages/Cafes'));
+const Cart = lazy(() => import('./pages/Cart'));
+const Checkout = lazy(() => import('./pages/Checkout'));
+const Login = lazy(() => import('./pages/Login'));
+
 import VirtualBarista from './components/VirtualBarista';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import { AnimatePresence, motion } from 'framer-motion';
+
 
 import AnimatedBackground from './components/AnimatedBackground';
 import CustomCursor from './components/CustomCursor';
@@ -38,18 +42,31 @@ const AnimatedRoutes = () => {
 
   return (
     <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
-        <Route path="/story" element={<PageWrapper><OurStory /></PageWrapper>} />
-        <Route path="/shop" element={<PageWrapper><Shop /></PageWrapper>} />
-        <Route path="/cafes" element={<PageWrapper><Cafes /></PageWrapper>} />
-        <Route path="/cart" element={<PageWrapper><Cart /></PageWrapper>} />
-        <Route path="/checkout" element={<PageWrapper><Checkout /></PageWrapper>} />
-        <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
-      </Routes>
+      <Suspense fallback={
+        <div className="fixed inset-0 flex items-center justify-center bg-[#0a0908] z-50">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-amber-500 font-serif italic text-2xl"
+          >
+            Brewing...
+          </motion.div>
+        </div>
+      }>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+          <Route path="/story" element={<PageWrapper><OurStory /></PageWrapper>} />
+          <Route path="/shop" element={<PageWrapper><Shop /></PageWrapper>} />
+          <Route path="/cafes" element={<PageWrapper><Cafes /></PageWrapper>} />
+          <Route path="/cart" element={<PageWrapper><Cart /></PageWrapper>} />
+          <Route path="/checkout" element={<PageWrapper><Checkout /></PageWrapper>} />
+          <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
+        </Routes>
+      </Suspense>
     </AnimatePresence>
   );
 };
+
 
 const App: React.FC = () => {
   return (

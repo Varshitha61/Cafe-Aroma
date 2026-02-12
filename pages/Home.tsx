@@ -3,18 +3,21 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Coffee, Award, Clock, MapPin, Instagram, Sparkles, ChevronDown } from 'lucide-react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
-const SectionReveal: React.FC<{ children: React.ReactNode; delay?: number }> = ({ children, delay = 0 }) => {
+const SectionReveal = React.memo(({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 1, delay, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      style={{ willChange: "transform, opacity" }}
     >
       {children}
     </motion.div>
   );
-};
+});
+
+
 
 const Home: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -33,10 +36,15 @@ const Home: React.FC = () => {
           className="absolute inset-0 z-0"
         >
           <img
-            src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=1920&q=80"
+            src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=1200&q=80"
             alt="Hero Coffee"
             className="w-full h-full object-cover brightness-[0.5]"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
+
+
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0908] via-transparent to-transparent" />
         </motion.div>
 
@@ -134,11 +142,15 @@ const Home: React.FC = () => {
                 <img
                   src={item.img}
                   alt={item.title}
+                  loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200';
                   }}
-                  className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[2s] ease-out brightness-[0.7]"
+                  className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[1.5s] ease-out brightness-[0.7]"
                 />
+
+
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0908] via-transparent to-transparent opacity-90" />
                 <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-16">
                   <h3 className="text-3xl sm:text-4xl md:text-5xl font-serif font-black text-white mb-8 tracking-tighter">{item.title}</h3>
@@ -180,11 +192,15 @@ const Home: React.FC = () => {
                   <img
                     src={item.img}
                     alt={item.name}
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800';
                     }}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-all duration-[2s]"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-all duration-[1.5s]"
                   />
+
+
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
                   <div className="absolute inset-0 flex flex-col justify-end p-12">
                     <h3 className="text-3xl font-serif font-black text-white mb-2">{item.name}</h3>
@@ -211,13 +227,17 @@ const Home: React.FC = () => {
             <div className="absolute -inset-4 bg-amber-500/10 rounded-[5rem] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
             <div className="aspect-[4/5] md:aspect-video lg:aspect-square overflow-hidden rounded-[2rem] md:rounded-[4rem] bg-stone-900">
               <img
-                src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80"
+                src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1000&q=75"
                 alt="Cafe Aroma Membership"
+                loading="lazy"
+                decoding="async"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200';
                 }}
                 className="relative z-10 w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-1000"
               />
+
+
             </div>
           </div>
           <div className="w-full lg:w-1/2">
@@ -256,11 +276,16 @@ const Home: React.FC = () => {
                 <img
                   src={img}
                   alt="Social"
+                  loading="lazy"
+                  decoding="async"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800';
                   }}
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000"
+                  style={{ willChange: "transform" }}
                 />
+
+
               </div>
             </SectionReveal>
           ))}

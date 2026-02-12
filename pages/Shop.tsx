@@ -8,11 +8,11 @@ import { motion, AnimatePresence, useSpring, useTransform, useMotionValue, useIn
 
 
 // --- Magnetic Button Component ---
-const MagneticButton: React.FC<{
+const MagneticButton = React.memo(({ children, isActive, onClick }: {
   children: React.ReactNode;
   isActive: boolean;
   onClick: () => void
-}> = ({ children, isActive, onClick }) => {
+}) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const springX = useSpring(x, { stiffness: 150, damping: 15 });
@@ -47,7 +47,8 @@ const MagneticButton: React.FC<{
       )}
     </motion.button>
   );
-};
+});
+
 
 const products: Product[] = [
   // --- Beverages: Hot Coffees ---
@@ -112,6 +113,52 @@ const products: Product[] = [
 
 const categories = ['All', 'Beverages', 'Food', 'Dessert', 'Merchandise'];
 
+const ProductCard = React.memo(({ product, index, addedItem, handleAdd }: { product: Product, index: number, addedItem: number | null, handleAdd: (p: Product, e: React.MouseEvent) => void }) => (
+  <motion.div
+    layout
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-50px" }}
+    exit={{ opacity: 0, scale: 0.9 }}
+    transition={{ duration: 0.5, delay: (index % 4) * 0.05 }}
+    className="group relative h-[450px] sm:h-[500px] md:h-[600px] rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-zinc-900 border border-white/5 shadow-2xl"
+    style={{ willChange: "transform, opacity" }}
+  >
+    <motion.img
+      layoutId={`img-${product.id}`}
+      src={`${product.image}?w=400&q=70`}
+      alt={product.name}
+      decoding="async"
+      onError={(e) => {
+        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600';
+      }}
+      className="w-full h-full object-cover group-hover:scale-105 transition-all duration-[1s] ease-out brightness-105"
+      loading="lazy"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+
+    <div className="absolute inset-0 p-6 md:p-12 flex flex-col justify-end">
+      <span className="text-amber-500 font-black tracking-[0.3em] uppercase text-[9px] mb-4">{product.category}</span>
+      <h3 className="text-xl md:text-3xl font-serif font-black text-white mb-6 leading-tight tracking-tight group-hover:text-amber-500 transition-colors">
+        {product.name}
+      </h3>
+      <div className="flex items-center justify-between">
+        <span className="text-lg md:text-xl font-black text-white">₹{product.price}</span>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={(e) => handleAdd(product, e)}
+          className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all ${addedItem === product.id ? 'bg-green-500' : 'bg-white text-black hover:bg-amber-500'}`}
+        >
+          {addedItem === product.id ? <Check size={18} /> : <Zap size={18} className="fill-current" />}
+        </motion.button>
+      </div>
+    </div>
+  </motion.div>
+));
+
 const Shop: React.FC = () => {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string>('All');
@@ -124,12 +171,12 @@ const Shop: React.FC = () => {
       : products.filter(p => p.category === activeCategory);
   }, [activeCategory]);
 
-  const handleAdd = (product: Product, e?: React.MouseEvent) => {
+  const handleAdd = React.useCallback((product: Product, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     addToCart(product);
     setAddedItem(product.id);
     setTimeout(() => setAddedItem(null), 1000);
-  };
+  }, [addToCart]);
 
   return (
     <div className="bg-[#0a0a0a] min-h-screen pb-40 overflow-hidden">
@@ -142,10 +189,13 @@ const Shop: React.FC = () => {
           className="absolute inset-0"
         >
           <img
-            src="https://images.unsplash.com/photo-1501339817308-44b29fadd1d2?w=1920&q=80"
+            src="https://images.unsplash.com/photo-1501339817308-44b29fadd1d2?w=1000&q=75"
             alt="Shop Interior"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1920';
+              (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1200';
             }}
             className="w-full h-full object-cover grayscale brightness-50"
           />
@@ -196,6 +246,7 @@ const Shop: React.FC = () => {
               src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1920&q=80"
               className="w-full h-full object-cover brightness-[0.8] group-hover:scale-105 transition-transform duration-[4s]"
               alt="Flagship Ritual"
+              decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
             <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-20">
@@ -256,47 +307,13 @@ const Shop: React.FC = () => {
         >
           <AnimatePresence mode="popLayout">
             {filteredProducts.map((product, index) => (
-              <motion.div
-                layout
+              <ProductCard
                 key={product.id}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.7, delay: (index % 4) * 0.1 }}
-                className="group relative h-[450px] sm:h-[500px] md:h-[600px] rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-zinc-900 border border-white/5 shadow-2xl"
-              >
-                <motion.img
-                  layoutId={`img-${product.id}`}
-                  src={`${product.image}?w=400&q=75`}
-                  alt={product.name}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800';
-                  }}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-all duration-[2s] ease-out brightness-105"
-                  loading="lazy"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-
-                <div className="absolute inset-0 p-6 md:p-12 flex flex-col justify-end">
-                  <span className="text-amber-500 font-black tracking-[0.3em] uppercase text-[9px] mb-4">{product.category}</span>
-                  <h3 className="text-xl md:text-3xl font-serif font-black text-white mb-6 leading-tight tracking-tight group-hover:text-amber-500 transition-colors">
-                    {product.name}
-                  </h3>
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg md:text-xl font-black text-white">₹{product.price}</span>
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={(e) => handleAdd(product, e)}
-                      className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all ${addedItem === product.id ? 'bg-green-500' : 'bg-white text-black hover:bg-amber-500'}`}
-                    >
-                      {addedItem === product.id ? <Check size={18} /> : <Zap size={18} className="fill-current" />}
-                    </motion.button>
-                  </div>
-                </div>
-              </motion.div>
+                product={product}
+                index={index}
+                addedItem={addedItem}
+                handleAdd={handleAdd}
+              />
             ))}
           </AnimatePresence>
         </motion.div>
@@ -306,5 +323,6 @@ const Shop: React.FC = () => {
     </div>
   );
 };
+
 
 export default Shop;
